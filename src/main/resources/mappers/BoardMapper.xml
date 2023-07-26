@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ybh.side.board.dao.BoardDAO">
+
+	<resultMap type="com.ybh.side.board.dto.BoardDTO" id="board_table">
+		<id property="boardNum" column="board_num"/>
+		<result property="title" column="title"/>
+		<result property="content" column="content"/>
+		<result property="writeId" column="write_id"/>
+		<result property="writeDate" column="write_date"/>
+	</resultMap>
+
+	<insert id="writeBoard">
+		INSERT INTO board_table (
+			board_num
+			, title
+			, content
+			, write_id
+			, write_date
+		)
+		VALUES (
+			board_num_seq.nextval
+			, #{title}
+			, #{content}
+			, #{writeId}
+			, sysdate
+		)
+	</insert>
+
+	<select id="selectBoardList" resultMap="board_table">
+		SELECT * FROM board_table
+	</select>
+
+
+</mapper>
