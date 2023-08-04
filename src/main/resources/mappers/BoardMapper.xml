@@ -54,31 +54,6 @@
 		WHERE like_num = #{boardNum} AND like_user = #{writeId}
 	</delete>
 
-	<select id="selectAllBoardList" resultType="BoardDTO">
-		SELECT BOARD.board_num
-		    , BOARD.board_parent_num
-		    , BOARD.content
-		    , BOARD.write_id
-		    , TO_CHAR(BOARD.write_date, 'YYYY-MM-DD') AS write_date
-		    , BOARD.reply_cnt
-		    , BOARD.like_cnt
-		    , USER_.user_name
-		FROM board_table BOARD
-		LEFT JOIN user_tb USER_
-		    ON BOARD.write_id = USER_.user_id
-		<if test="likeMyGubun != null">
-			<if test="likeMyGubun.equals('LIKE_LIST')">
-				LEFT JOIN board_like_table LIKE_TB
-			    ON BOARD.board_num = LIKE_TB.like_num
-				WHERE LIKE_TB.like_user = #{sessUserId}
-			</if>
-			<if test="likeMyGubun.equals('MY_LIST')">
-				WHERE BOARD.write_id = #{sessUserId}
-			</if>
-		</if>
-		ORDER BY board_num desc
-	</select>
-
 	<delete id="deleteBoard">
 		DELETE board_table
 		WHERE board_num = #{boardNum}
@@ -105,14 +80,24 @@
 		WHERE board_num = #{boardNum}
 	</select>
 
-	<select id="selectAllBoardListTestCnt" resultType="int">
+	<select id="selectAllBoardListCnt" resultType="int">
         SELECT COUNT(*)
 		FROM board_table BOARD
 		LEFT JOIN user_tb USER_
 	   	ON BOARD.write_id = USER_.user_id
+	   	<if test="likeMyGubun != null">
+			<if test="likeMyGubun.equals('LIKE_LIST')">
+				LEFT JOIN board_like_table LIKE_TB
+			   		ON BOARD.board_num = LIKE_TB.like_num
+				WHERE LIKE_TB.like_user = #{sessUserId}
+			</if>
+			<if test="likeMyGubun.equals('MY_LIST')">
+				WHERE BOARD.write_id = #{sessUserId}
+			</if>
+		</if>
 	</select>
 
-	<select id="selectAllBoardListTest" resultType="BoardDTO">
+	<select id="selectAllBoardList" resultType="BoardDTO">
 		SELECT * FROM
         	(
 	            SELECT ROW_NUMBER() OVER(ORDER BY board_num DESC) AS ROW_NUM
@@ -127,6 +112,16 @@
 				FROM board_table BOARD
 				LEFT JOIN user_tb USER_
 			    	ON BOARD.write_id = USER_.user_id
+			    <if test="likeMyGubun != null">
+					<if test="likeMyGubun.equals('LIKE_LIST')">
+						LEFT JOIN board_like_table LIKE_TB
+					   		ON BOARD.board_num = LIKE_TB.like_num
+						WHERE LIKE_TB.like_user = #{sessUserId}
+					</if>
+					<if test="likeMyGubun.equals('MY_LIST')">
+						WHERE BOARD.write_id = #{sessUserId}
+					</if>
+				</if>
        		)A
    		<![CDATA[
    		 WHERE ROW_NUM > (#{pageNum} - 1) * #{pageResultCnt}

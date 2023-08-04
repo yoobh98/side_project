@@ -13,12 +13,10 @@ public interface BoardService {
 
 	public int updateLike(BoardDTO dto);
 
-	public List<BoardDTO> selectAllBoardList(BoardDTO dto);
-
 	public int deleteBoard(BoardDTO dto);
 
 	public BoardDTO updateBoardWrite(BoardDTO dto);
 
-	public PageDTO selectAllBoardListTest(BoardDTO dto);
+	public PageDTO selectAllBoardList(BoardDTO dto);
 
 }

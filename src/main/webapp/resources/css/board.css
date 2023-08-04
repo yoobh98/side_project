@@ -63,3 +63,25 @@
 		padding : 5px;
 		font-weight: bold;
 	}
+
+
+
+
+/*  											페이징  													 */
+
+.list_page{margin-top:20px;margin-bottom: 20px;height:32px;text-align:center}
+/* .list_page a{display:inline-block;margin:0 1px;width:30px;height:30px;line-height:30px;text-align:center;vertical-align:top;font-size:14px;color:#666;border:1px solid #d5d5d5;background:#fff;z-index:10;*display:inline;zoom:1} */
+.list_page a{display:inline-block;margin:0 1px;width:30px;line-height:30px;text-align:center;vertical-align:top;font-size:14px;color:#666;background:#fff;z-index:10;*display:inline;zoom:1}
+.list_page a.active,
+.list_page a:hover{color:#fff;font-weight:700;border-color:#8e8e8e;background:#999;z-index:20}
+.list_page .first .icon{display:block;width:30px;height:30px;background:url("../images/icon/list_page_first.png") no-repeat center center}
+.list_page .prev .icon{display:block;width:30px;height:30px;background:url("../images/icon/list_page_prev.png") no-repeat center center}
+.list_page .next .icon{display:block;width:30px;height:30px;background:url("../images/icon/list_page_next.png") no-repeat center center}
+.list_page .last .icon{display:block;width:30px;height:30px;background:url("../images/icon/list_page_last.png") no-repeat center center}
+.list_page .first:hover .icon{background:url("../images/icon/list_page_first_on.png") no-repeat center center}
+.list_page .prev:hover .icon{background:url("../images/icon/list_page_prev_on.png") no-repeat center center}
+.list_page .next:hover .icon{background:url("../images/icon/list_page_next_on.png") no-repeat center center}
+.list_page .last:hover .icon{background:url("../images/icon/list_page_last_on.png") no-repeat center center}
+.list_page .select_wrap{position: absolute;width: 70px; margin-top: -30px; }
+.list_page .input_text{margin-left:3px;padding:0 0 0 7px;width:100%;height:32px;font-size:13px;color:#666;border:1px solid #d5d5d5;background:#fff url("../images/icon/select.png") no-repeat right center;-webkit-appearance: none;-moz-appearance: none;appearance: none; -webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;*line-height:28px;line-height:28px\9}
+.list_page select::-ms-expand {display: none;        /* 화살표 없애기 for IE10, 11*/}

@@ -111,4 +111,20 @@
 
 		$("#"+numberId).html(pageHtml);
     }
+
+
+
+    // 스크롤시 페이징 처리
+   	function scrollpaging(list, resultCntId, searchFunc){
+    	let pageHtml = "";
+        let startPage = "";
+        let endPage = "";
+        let allEndPage = Math.ceil(list.resultCnt / Number($("#"+resultCntId).val()));
+
+        startPage = Math.floor((list.pageNum - 1) / 10) * 10 + 1;
+        if ((startPage + 10 - 1) < allEndPage)
+        	endPage = startPage + 10 - 1;
+       	else
+       		endPage = allEndPage;
+    }
 </script>

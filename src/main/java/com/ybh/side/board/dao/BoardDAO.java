@@ -19,16 +19,14 @@ public interface BoardDAO {
 	public int minusLikeCnt(BoardDTO dto);
 	public int deleteLikeUser(BoardDTO dto);
 
-	public List<BoardDTO> selectAllBoardList(BoardDTO dto);
-
 	public int deleteBoard(BoardDTO dto);
 
 	public int updateBoardWrite(BoardDTO dto);
 
 	public BoardDTO selectBoardOne(BoardDTO dto);
 
-	public int selectAllBoardListTestCnt(BoardDTO dto);
+	public int selectAllBoardListCnt(BoardDTO dto);
 
-	public List<BoardDTO> selectAllBoardListTest(BoardDTO dto);
+	public List<BoardDTO> selectAllBoardList(BoardDTO dto);
 
 }

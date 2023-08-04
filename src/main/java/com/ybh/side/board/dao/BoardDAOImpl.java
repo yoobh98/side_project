@@ -52,11 +52,6 @@ public class BoardDAOImpl implements BoardDAO{
 	}
 
 	@Override
-	public List<BoardDTO> selectAllBoardList(BoardDTO dto) {
-		return sqlSession.selectList("BoardMapper.selectAllBoardList", dto);
-	}
-
-	@Override
 	public int deleteBoard(BoardDTO dto) {
 		return sqlSession.delete("BoardMapper.deleteBoard", dto);
 	}
@@ -72,12 +67,12 @@ public class BoardDAOImpl implements BoardDAO{
 	}
 
 	@Override
-	public int selectAllBoardListTestCnt(BoardDTO dto) {
-		return sqlSession.selectOne("BoardMapper.selectAllBoardListTestCnt", dto);
+	public int selectAllBoardListCnt(BoardDTO dto) {
+		return sqlSession.selectOne("BoardMapper.selectAllBoardListCnt", dto);
 	}
 
 	@Override
-	public List<BoardDTO> selectAllBoardListTest(BoardDTO dto) {
-		return sqlSession.selectList("BoardMapper.selectAllBoardListTest", dto);
+	public List<BoardDTO> selectAllBoardList(BoardDTO dto) {
+		return sqlSession.selectList("BoardMapper.selectAllBoardList", dto);
 	}
 }

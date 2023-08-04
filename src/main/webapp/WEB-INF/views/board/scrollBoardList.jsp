@@ -5,17 +5,30 @@
 	var listCart;
 	var path;
 	var updateTemp;
-	// 임시 변수 -> 프론트에 여러개 생성 VS dto에 여러개 생성
-	// dto에 생성이 더 깔끔할 것 같긴한데, 거기서 거기인 것 같음(dto에 생성하고 객체에 담아서 쏴줘도, 쿼리에는 없으니깐 헷갈릴수도)
-
+	var movePageNum = 1;
+	var pageResult = 0;
 	// 기능 건들일때 식별값 할당
 	var userNum;
 
+	//element.addEventListener('resize', onScroll) - 브라우저 사이즈 변경시에도 처리해줘야함
 	$(function(){
-		$("#board_List_a").addClass("main_menu_selected")
-		$("#side_board_link").addClass("side_menu_selected")
+		$("#side_scroll_board_link").addClass("side_menu_selected")
 		selectLikeList();
+		window.scrollTo(0,0);
+		window.addEventListener("scroll", infiniteScroll);
 	})
+
+	function infiniteScroll(){
+		//console.log(window.innerHeight  + window.scrollY +" : "+ (document.body.offsetHeight - 10));
+	    if(window.innerHeight + window.scrollY >= (document.body.offsetHeight - 10)) {
+	    	pageResult -=10;
+	    	if(pageResult > 0){
+	    		//console.log(window.innerHeight + window.scrollY +" : "+ (document.body.offsetHeight - 10));
+	    		movePageNum++;
+		    	addBoardList(movePageNum);
+	    	}
+		}
+	}
 
 	function selectLikeList(pathGubun) {
 
@@ -61,10 +74,15 @@
 		}
 	}
 
-	function selectAllBoardListCallBack(data) {
-		listCart = data.result;
-		var addHTML = "";
 
+	function selectAllBoardListCallBack(data) {
+		listCart = data;
+		var addHTML = "";
+		if(pageResult === 0){
+			pageResult = data.resultCnt;
+		}
+		console.log(pageResult);
+		//순서 이슈?
 		if(data.resultCnt === 0) {
 			addHTML += "<h1>등록된 글이 없습니다.</h1>";
 		}else {
@@ -148,8 +166,7 @@
 			}//for-END
 		}//else-END
 
-		paging(data, "board_page_number", "board_list_page_result_cnt", "selectAllBoardList");
-		$(".list_page").show();
+		scrollpaging(data, "board_list_page_result_cnt", "selectAllBoardList");
 		$("#board_content_div").html(addHTML);
 	}
 
@@ -273,7 +290,133 @@
 		selectAllBoardList();
 	}
 
+
+	function addBoardList(movePageNum){
+		if(movePageNum === undefined) pageNum =1;
+		else pageNum = movePageNum;
+
+		var jsonData = {
+			sessUserId : sessUserId
+			, likeMyGubun : path
+			, pageNum : pageNum
+			, pageResultCnt : $("#board_list_page_result_cnt").val()
+		}
+
+		doCommonAjax("selectAllBoardList", jsonData, "addBoardListCallBack");
+
+		if(jsonData.likeMyGubun === "LIKE_LIST"){
+			$("#board_like_a").addClass("main_menu_selected");
+			$("#board_my_a").removeClass("main_menu_selected");
+			$("#board_List_a").removeClass("main_menu_selected");
+		}else if(jsonData.likeMyGubun === "MY_LIST"){
+			$("#board_my_a").addClass("main_menu_selected");
+			$("#board_List_a").removeClass("main_menu_selected");
+			$("#board_like_a").removeClass("main_menu_selected");
+		}else{
+			$("#board_List_a").addClass("main_menu_selected");
+			$("#board_my_a").removeClass("main_menu_selected");
+			$("#board_like_a").removeClass("main_menu_selected");
+		}
+	}
+
+
+	function addBoardListCallBack(data) {
+		listCart = data;
+		var addHTML = "";
+		if(pageResult === 0){
+			pageResult = data.resultCnt;
+		}
+		console.log(pageResult);
+		//순서 이슈?
+		if(data.resultCnt === 0) {
+			addHTML += "<h1>등록된 글이 없습니다.</h1>";
+		}else {
+			for([i,list] of data.result.entries()) {
+			var content = list.content.replace(/(?:\r\n|\r|\n)/g, '<br />');
+/* 1-s */	addHTML += "<li class = 'board_list'>";
+	/* 2-s */	addHTML += "<div class = 'board_div'>";
+		/* 3-s */	addHTML += "<div id = 'board_change_id_" + list.boardNum + "'>";
+
+/* top-s */			addHTML += "<div class = 'board_div_top'>";
+						addHTML += "<div class = 'board_div_top_one'>";
+						addHTML += "<p class = 'board_p'>" + list.userName + "</p>";
+						addHTML += "</div>";
+						addHTML += "<div class = 'board_div_top_two'>";
+						addHTML += "<p class = 'board_p'>" + list.writeDate + "</p>";
+
+	/* 수정|삭제 */		addHTML += "<span id = 'dialog_" + list.boardNum + "' style='display:none;' class='span_border'>";
+						addHTML +=  "<a href = 'javascript:void(0)' onclick='updateBoard(" + list.boardNum + ")'>수정</a> ";
+						addHTML +=  "<a href = 'javascript:void(0)' onclick='deleteBoard(" + list.boardNum + ")'>삭제</a> ";
+						addHTML += "<input type = 'hidden' id='hidden_dialog_" + list.boardNum + "' value='f'>";
+	/* 수정|삭제 */		addHTML += "</span>";
+
+						if(sessUserId === list.writeId){
+							addHTML += "<a href='javascript:void(0)' onclick='dialog_show_hide(" + list.boardNum + ")'><img src='<%=request.getContextPath()%>/resources/images/three_dots.png' class='img_icon'></a>" ;
+						}
+						addHTML += "</div>";
+/* top-e */			addHTML += "</div>";
+
+					addHTML += "<p class='board_content'>" + content + "</p>";
+					addHTML += "<hr style='color : gray; opacity : 0.5;'>";
+/* Bottom-s */		addHTML += "<div class='list_bottom_div'>";
+						addHTML += "<div class='like_div'>";
+						addHTML += "<a href='javascript:void(0)' onclick = 'doLike(" + list.boardNum + ")'>";
+						if(likeList.length === 0){
+							addHTML += "<img src='<%=request.getContextPath()%>/resources/images/like_off.jpg' class='img_icon' id='like_num_" + list.boardNum + "'> <span id='like_span_" + list.boardNum + "'>" + list.likeCnt + "</span>";
+						}else{
+							var k = 0 ;
+							for(var j = 0 ; j < likeList.length ; j++){
+								if(list.boardNum === likeList[j].likeNum){
+									k = 1;
+									break;
+								}
+							}
+
+							if(k === 1){
+								addHTML += "<img src='<%=request.getContextPath()%>/resources/images/like_on.jpg' class='img_icon' id='like_num_" + list.boardNum + "'> <span id='like_span_" + list.boardNum + "'>" + list.likeCnt + "</span>";
+							}else {
+								addHTML += "<img src='<%=request.getContextPath()%>/resources/images/like_off.jpg' class='img_icon' id='like_num_" + list.boardNum + "'> <span id='like_span_" + list.boardNum + "'>" + list.likeCnt + "</span>";
+							}
+						}
+						addHTML += "</a>";
+						addHTML += "</div>";
+						addHTML += "<div class='reply_div'>";
+						addHTML += "<a href = 'javascript:void(0)' onclick = 'openReplyPopup()'>";
+						addHTML += "<img src='<%=request.getContextPath()%>/resources/images/댓글아이콘.png' class='img_icon' onclick='openReplyPopup()'> " + list.replyCnt;
+						addHTML += "</a>";
+						addHTML += "</div>";
+/* Bottom-e */		addHTML += "</div>";
+
+		/* 3-e */	addHTML += "</div>";
+
+/* hide-s */	addHTML += "<div id = 'board_update_form_id_" + list.boardNum + "' style='display : none'>";
+	/* TOP-s */		addHTML += "<div class = 'board_div_top'>";
+					addHTML += "<div class = 'board_div_top_one'>";
+					addHTML += "<p class = 'board_p'>" + list.userName + "</p>";
+					addHTML += "</div>";
+					addHTML += "<div class = 'board_div_top_two'>";
+					addHTML += "<p class = 'board_p'>" + list.writeDate + "</p>";
+					addHTML += "</div>";
+	/* TOP-e */		addHTML += "</div>";
+				addHTML += "<textarea rows='10' cols='110%' class='board_textarea' id='board_update_form_content_" + list.boardNum + "'>" + list.content + "</textarea>";
+				addHTML += "<hr style='color : gray; opacity : 0.5;'>";
+	/* Bottom-s */	addHTML += "<div style='text-align : right;'>";
+					addHTML += "<button onclick='updateBoardWrite(" + list.boardNum + ")'>완료</button>";
+					addHTML += "<button onclick='updateBoard()'>취소</button> ";
+	/* Bottom-e */	addHTML += "</div>";
+/* hide-e */	addHTML += "</div>";
+
+	/* 2-e */	addHTML += "</div>";
+/* 1-e */	addHTML += "</div>";
+			}//for-END
+		}//else-END
+
+		scrollpaging(data, "board_list_page_result_cnt", "selectAllBoardList");
+		$("#board_content_div").append(addHTML);
+	}
+
 </script>
+
 
 <div class="board_write">
 	<div class="board_write_div">
@@ -289,9 +432,4 @@
 
 <div id="board_content_div">
 </div>
-
-<div class="list_page">
-	<span id="board_page_number">
-	</span>
-	<input type="hidden" id="board_list_page_result_cnt" value="10">
-</div>
+<input type="hidden" id="board_list_page_result_cnt" value="10">

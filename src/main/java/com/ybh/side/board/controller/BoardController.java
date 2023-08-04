@@ -46,12 +46,6 @@ public class BoardController {
 	}
 
 	@ResponseBody
-	@PostMapping("selectAllBoardList")
-	public List<BoardDTO> selectAllBoardList(@RequestBody BoardDTO dto){
-		return bs.selectAllBoardList(dto);
-	}
-
-	@ResponseBody
 	@PostMapping("deleteBoard")
 	public int deleteBoard(@RequestBody BoardDTO dto) {
 		return bs.deleteBoard(dto);
@@ -68,15 +62,15 @@ public class BoardController {
 		return bs.updateBoardWrite(dto);
 	}
 
-	@GetMapping("goBoardListTest")
-	public String goBoardListTest() {
-		return "board/boardListTest.page";
+	@GetMapping("goScrollBoardList")
+	public String goScrollBoardList() {
+		return "board/scrollBoardList.page";
 	}
 
 	@ResponseBody
-	@PostMapping("selectAllBoardListTest")
-	public PageDTO selectAllBoardListTest(@RequestBody BoardDTO dto){
-		return bs.selectAllBoardListTest(dto);
+	@PostMapping("selectAllBoardList")
+	public PageDTO selectAllBoardList(@RequestBody BoardDTO dto){
+		return bs.selectAllBoardList(dto);
 	}
 
 }

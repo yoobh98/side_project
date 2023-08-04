@@ -44,11 +44,6 @@ public class BoardServiceImpl implements BoardService{
 	}
 
 	@Override
-	public List<BoardDTO> selectAllBoardList(BoardDTO dto) {
-		return dao.selectAllBoardList(dto);
-	}
-
-	@Override
 	public int deleteBoard(BoardDTO dto) {
 		return dao.deleteBoard(dto);
 	}
@@ -63,12 +58,12 @@ public class BoardServiceImpl implements BoardService{
 	}
 
 	@Override
-	public PageDTO selectAllBoardListTest(BoardDTO dto) {
+	public PageDTO selectAllBoardList(BoardDTO dto) {
 		PageDTO pageDTO= new PageDTO();
 		pageDTO.setPageNum(dto.getPageNum());
 		pageDTO.setPageResultCnt(dto.getPageResultCnt());
-		pageDTO.setResultCnt(dao.selectAllBoardListTestCnt(dto));
-		pageDTO.setResult(dao.selectAllBoardListTest(dto));
+		pageDTO.setResultCnt(dao.selectAllBoardListCnt(dto));
+		pageDTO.setResult(dao.selectAllBoardList(dto));
 		return pageDTO;
 	}
 
