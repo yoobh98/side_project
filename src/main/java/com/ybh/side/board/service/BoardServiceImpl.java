@@ -7,20 +7,69 @@ import org.springframework.stereotype.Service;
 
 import com.ybh.side.board.dao.BoardDAO;
 import com.ybh.side.board.dto.BoardDTO;
+import com.ybh.side.common.dto.PageDTO;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class BoardServiceImpl implements BoardService{
 
-	@Autowired BoardDAO dao;
+	private final BoardDAO dao;
 
 	@Override
-	public int writeBoard(BoardDTO dto) {
-		return dao.writeBoard(dto);
+	public int insertBoard(BoardDTO dto) {
+		return dao.insertBoard(dto);
 	}
 
 	@Override
-	public List<BoardDTO> selectBoardList() {
-		return dao.selectBoardList();
+	public List<BoardDTO> selectLikeList(BoardDTO dto) {
+		return dao.selectLikeList(dto);
+	}
+
+	@Override
+	public int updateLike(BoardDTO dto) {
+		String YN = dao.selectLikeIsYN(dto);
+		int result = 0 ;
+		if(YN == null) {
+			dao.plusLikeCnt(dto);
+			dao.insertLikeUser(dto);
+			result = 1;
+		}else {
+			dao.minusLikeCnt(dto);
+			dao.deleteLikeUser(dto);
+			result = 2;
+		}
+		return result;
+	}
+
+	@Override
+	public List<BoardDTO> selectAllBoardList(BoardDTO dto) {
+		return dao.selectAllBoardList(dto);
+	}
+
+	@Override
+	public int deleteBoard(BoardDTO dto) {
+		return dao.deleteBoard(dto);
+	}
+
+	@Override
+	public BoardDTO updateBoardWrite(BoardDTO dto) {
+		BoardDTO addObject = new BoardDTO();
+		if(dao.updateBoardWrite(dto) ==1) {
+			addObject = dao.selectBoardOne(dto);
+		}
+		return addObject;
+	}
+
+	@Override
+	public PageDTO selectAllBoardListTest(BoardDTO dto) {
+		PageDTO pageDTO= new PageDTO();
+		pageDTO.setPageNum(dto.getPageNum());
+		pageDTO.setPageResultCnt(dto.getPageResultCnt());
+		pageDTO.setResultCnt(dao.selectAllBoardListTestCnt(dto));
+		pageDTO.setResult(dao.selectAllBoardListTest(dto));
+		return pageDTO;
 	}
 
 }

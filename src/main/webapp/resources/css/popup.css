@@ -1,0 +1,26 @@
+@charset "UTF-8";
+/* 레이어팝업 */
+.popup_mask { display:none; width:100%; height:100%; position:fixed; top:0; left:0; z-index:200; overflow:hidden}
+.popup_mask_block { display:block; width:100%; height:100%; position:fixed; top:0; left:0; z-index:200; overflow:hidden}
+.popup_mask_in { background:#000; opacity:0.7;width:100%; height:100%; position:fixed; top:0; left:0; z-index:200; overflow:hidden}
+.popup_window { display:none; position:fixed; width:800px; height:auto; max-height: 500px; top:100px; left:50%; margin-left:-400px; background:#fff; z-index:300; overflow:hidden}
+.popup_window1179{ display:none; position:fixed; width:1179px; height:auto; max-height: 500px; top:100px; left:50%; margin-left:-570px; background:#fff; z-index:300; overflow:hidden}
+.popup_window1000{ display:none; position:fixed; width:1000px; height:auto; max-height: 500px; top:100px; left:50%; margin-left:-400px; background:#fff; z-index:300; overflow:hidden}
+.popup_window880{ display:none; position:fixed; width:880px; height:auto; max-height: 500px; top:100px; left:50%; margin-left:-400px; background:#fff; z-index:300; overflow:hidden}
+.popup_window640 { display:none; position:fixed; width:640px; height:auto; max-height: 500px; top:100px; left:50%; margin-left:-320px; background:#fff; z-index:300; overflow:hidden}
+.popup_window640_block { display:block; position:fixed; width:640px; height:auto; max-height: 500px; top:100px; left:50%; margin-left:-320px; background:#fff; z-index:300; overflow:hidden}
+.popup_window500 { display:none; position:fixed; width:500px; height:auto; max-height: 500px; top:100px; left:50%; margin-left:-250px; background:#fff; z-index:300; overflow:hidden}
+.popup_window320 { display:block; position:fixed; width:320px; height:auto; top:100px; left:50%; margin-left:-180px; background:#fff; z-index:300; overflow:hidden}
+.popup_window.acitve { display:block}
+.popup_title_wrap {float: left; width:100%;background: #00a5e5;font-size: 18px;color: #fff; padding:8px 14px;-webkit-box-sizing: border-box; -moz-box-sizing: border-box;box-sizing: border-box; }
+.popup_title_wrap .popup_title { line-height: 35px}
+.popup_panel {display: block;max-height: 400px; overflow-y: scroll;padding: 23px 30px;}
+.popup_panel .sub_panel_box:first-child{margin-top:20px}
+.popup_panel .sub_panel_box .sub_title { font-size:17px}
+.popup_panel .sub_panel_box .sub_title2 { font-size:17px}
+.popup_close { position:absolute; width:30px; height:30px; top:10px; right:10px; z-index:310;}
+.popup_close img { width:100%}
+.popbtns{display:table; margin:auto; height:32px;margin-top: 15px;}
+.popbtns .btns{display: inline-block;}
+.popbtns2{float: right;height:32px; margin-top: 15px;margin-bottom: 15px;}
+.popbtns_long{display:table; margin:auto; height:32px;margin-top: 15px; margin-bottom: 30px;}

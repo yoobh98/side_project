@@ -5,12 +5,23 @@
 	var listCart;
 	var path;
 	var updateTemp;
+	window.addEventListener("scroll", infiniteScroll);
+	let isUpdateList = true;
 
 	$(function(){
 		$("#board_List_a").addClass("main_menu_selected")
 		$("#side_board_link").addClass("side_menu_selected")
 		selectLikeList();
+		console.log(window.innerHeight)
+		console.log(window.scrollY)
+		console.log(document.body.offsetHeight)
 	})
+
+	function infiniteScroll(){
+	    if(window.innerHeight + window.scrollY >= document.body.offsetHeight ) {
+			console.log('2끝');
+		}
+	}
 
 	function selectLikeList(pathGubun) {
 
@@ -25,14 +36,21 @@
 
 	function selectLikeListCallBack(list){
 		likeList = list;
-		selectAllBoardList();
+		selectAllBoardListTest();
 	}
 
-	function selectAllBoardList(){
+	function selectAllBoardListTest(movePageNum){
+		if(movePageNum === undefined) pageNum =1;
+		else pageNum = movePageNum;
+
 		var jsonData = {
 			sessUserId : sessUserId
 			, likeMyGubun : path
+			, pageNum : pageNum
+			, pageResultCnt : $("#board_list_page_result_cnt").val()
 		}
+
+		doCommonAjax("selectAllBoardListTest", jsonData, "selectAllBoardListTestCallBack");
 
 		if(jsonData.likeMyGubun === "LIKE_LIST"){
 			$("#board_like_a").addClass("main_menu_selected");
@@ -47,31 +65,17 @@
 			$("#board_my_a").removeClass("main_menu_selected");
 			$("#board_like_a").removeClass("main_menu_selected");
 		}
-
-		$.ajax({
-			url : "selectAllBoardList"
-			, type : "post"
-			, data : JSON.stringify(jsonData)
-			, contentType : "application/json; charset=utf-8"
-			, dataType : "json"
-			, success : function(data){
-				selectAllBoardListCallBack(data);
-			}
-			, error : function(){
-				alert("오류 발생");
-			}
-		})
 	}
 
 
-	function selectAllBoardListCallBack(data) {
+	function selectAllBoardListTestCallBack(data) {
 		listCart = data;
 		var addHTML = "";
 
-		if(data.length === 0) {
+		if(data.resultCnt === 0) {
 			addHTML += "<h1>등록된 글이 없습니다.</h1>";
 		}else {
-			for(list of data) {
+			for([i,list] of data.result.entries()) {
 			var content = list.content.replace(/(?:\r\n|\r|\n)/g, '<br />');
 /* 1-s */	addHTML += "<li class = 'board_list'>";
 	/* 2-s */	addHTML += "<div class = 'board_div'>";
@@ -151,6 +155,7 @@
 			}//for-END
 		}//else-END
 
+		paging(list, "board_list_number", "board_list_page_result_cnt", "selectAllBoardListTest");
 		$("#board_content_div").html(addHTML);
 	}
 
@@ -189,7 +194,7 @@
 
 	function writeBoardCallBack(data) {
 		if(data === 1){
-			selectAllBoardList();
+			selectAllBoardListTest();
 			wrtieCancle();
 		}else{
 			alert('오류 발생, 다시 시도해주세요.');
@@ -261,7 +266,7 @@
 							listCart.splice(i, 1);
 						}
 					}
-					selectAllBoardListCallBack(listCart);
+					selectAllBoardListTestCallBack(listCart);
 					alert('삭제되었습니다.');
 				}
 				, error : function(){
@@ -301,13 +306,14 @@
 						listCart.splice(i, 1, data);
 					}
 				}
-				selectAllBoardListCallBack(listCart);
+				selectAllBoardListTestCallBack(listCart);
 			}
 			, error : function(){
 				alert('ajax오류');
 			}
 		})
 	}
+
 
 </script>
 
@@ -325,3 +331,4 @@
 
 <div id="board_content_div">
 </div>
+<input type="hidden" id="board_list_page_result_cnt" value="10">

@@ -1,37 +1,138 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper
-  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ybh.side.board.dao.BoardDAO">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="BoardMapper">
 
-	<resultMap type="com.ybh.side.board.dto.BoardDTO" id="board_table">
-		<id property="boardNum" column="board_num"/>
-		<result property="title" column="title"/>
-		<result property="content" column="content"/>
-		<result property="writeId" column="write_id"/>
-		<result property="writeDate" column="write_date"/>
-	</resultMap>
-
-	<insert id="writeBoard">
+	<insert id="insertBoard">
 		INSERT INTO board_table (
 			board_num
-			, title
 			, content
 			, write_id
-			, write_date
 		)
 		VALUES (
 			board_num_seq.nextval
-			, #{title}
 			, #{content}
 			, #{writeId}
-			, sysdate
 		)
 	</insert>
 
-	<select id="selectBoardList" resultMap="board_table">
-		SELECT * FROM board_table
+	<select id="selectLikeList" resultType="BoardDTO">
+		SELECT like_num
+		FROM board_like_table
+		WHERE like_user = #{writeId}
+		ORDER BY like_num DESC
 	</select>
 
+	<select id="selectLikeIsYN" resultType="string">
+		SELECT like_num AS board_num
+		FROM board_like_table
+		WHERE like_num = #{boardNum}
+			AND like_user = #{writeId}
+	</select>
+
+	<update id="plusLikeCnt">
+		UPDATE board_table
+		SET like_cnt = like_cnt + 1 WHERE board_num = #{boardNum}
+	</update>
+
+	<insert id="insertLikeUser">
+		INSERT INTO board_like_table(
+			like_num
+			, like_user
+		) VALUES(
+			#{boardNum}
+			, #{writeId}
+		)
+	</insert>
+
+	<update id="minusLikeCnt">
+		UPDATE board_table
+		SET like_cnt = like_cnt - 1 WHERE board_num = #{boardNum}
+	</update>
+
+	<delete id="deleteLikeUser">
+		DELETE board_like_table
+		WHERE like_num = #{boardNum} AND like_user = #{writeId}
+	</delete>
+
+	<select id="selectAllBoardList" resultType="BoardDTO">
+		SELECT BOARD.board_num
+		    , BOARD.board_parent_num
+		    , BOARD.content
+		    , BOARD.write_id
+		    , TO_CHAR(BOARD.write_date, 'YYYY-MM-DD') AS write_date
+		    , BOARD.reply_cnt
+		    , BOARD.like_cnt
+		    , USER_.user_name
+		FROM board_table BOARD
+		LEFT JOIN user_tb USER_
+		    ON BOARD.write_id = USER_.user_id
+		<if test="likeMyGubun != null">
+			<if test="likeMyGubun.equals('LIKE_LIST')">
+				LEFT JOIN board_like_table LIKE_TB
+			    ON BOARD.board_num = LIKE_TB.like_num
+				WHERE LIKE_TB.like_user = #{sessUserId}
+			</if>
+			<if test="likeMyGubun.equals('MY_LIST')">
+				WHERE BOARD.write_id = #{sessUserId}
+			</if>
+		</if>
+		ORDER BY board_num desc
+	</select>
+
+	<delete id="deleteBoard">
+		DELETE board_table
+		WHERE board_num = #{boardNum}
+	</delete>
+
+	<update id="updateBoardWrite">
+		UPDATE board_table
+		SET content = #{content}
+		WHERE board_num = #{boardNum}
+	</update>
+
+	<select id="selectBoardOne" resultType="BoardDTO">
+		SELECT BOARD.board_num
+		    , BOARD.board_parent_num
+		    , BOARD.content
+		    , BOARD.write_id
+		    , TO_CHAR(BOARD.write_date, 'YYYY-MM-DD') AS write_date
+		    , BOARD.reply_cnt
+		    , BOARD.like_cnt
+		    , USER_.user_name
+		FROM board_table BOARD
+		LEFT JOIN user_tb USER_
+		    ON BOARD.write_id = USER_.user_id
+		WHERE board_num = #{boardNum}
+	</select>
+
+	<select id="selectAllBoardListTestCnt" resultType="int">
+        SELECT COUNT(*)
+		FROM board_table BOARD
+		LEFT JOIN user_tb USER_
+	   	ON BOARD.write_id = USER_.user_id
+	</select>
+
+	<select id="selectAllBoardListTest" resultType="BoardDTO">
+		SELECT * FROM
+        	(
+	            SELECT ROW_NUMBER() OVER(ORDER BY board_num DESC) AS ROW_NUM
+		            , BOARD.board_num
+				    , BOARD.board_parent_num
+				    , BOARD.content
+				    , BOARD.write_id
+				    , TO_CHAR(BOARD.write_date, 'YYYY-MM-DD') AS write_date
+				    , BOARD.reply_cnt
+				    , BOARD.like_cnt
+				    , USER_.user_name
+				FROM board_table BOARD
+				LEFT JOIN user_tb USER_
+			    	ON BOARD.write_id = USER_.user_id
+       		)A
+   		<![CDATA[
+   		 WHERE ROW_NUM > (#{pageNum} - 1) * #{pageResultCnt}
+	     AND ROW_NUM <= #{pageNum} * #{pageResultCnt}
+	     ORDER BY ROW_NUM
+   		]]>
+	</select>
 
 </mapper>

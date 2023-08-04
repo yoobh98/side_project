@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CommonMapper">
+
+
+	<select id="selectAllUserList" resultType="UserDTO">
+		SELECT user_id
+			, user_pw
+		FROM user_tb
+	</select>
+
+	<insert id="insertRegister">
+		INSERT INTO user_tb(
+			user_id
+			, user_pw
+			, user_name
+		) VALUES(
+			#{userId}
+			, #{userPw}
+			, #{userName}
+		)
+	</insert>
+
+	<select id="selectOneUser" parameterType="String" resultType="UserDTO">
+		SELECT *
+		FROM user_tb
+		WHERE user_id = #{userId}
+	</select>
+
+</mapper>

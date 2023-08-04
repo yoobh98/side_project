@@ -1,0 +1,143 @@
+@charset "UTF-8";
+	body{
+		margin: 0;
+	}
+	.main_wrap{
+		margin: auto;
+		text-align: center;
+	}
+
+	.header_div_nav{
+		display : flex;
+		background-color: rgb(13 70 133);
+		height: 50px;
+		font-size : 16pt;
+		font-weight: bold;
+	}
+
+	.header_div_nav a{
+		color :white;
+		padding : 0 5px 0 5px;
+		text-decoration : none;
+	}
+
+	.header_nav_1{
+		width:10%;
+	}
+	.header_nav_2{
+		width: 80%;
+	}
+	.header_nav_3{
+		width:10%;
+	}
+
+
+	.box_login_div {
+		text-align: center;
+		margin-top: 1.75rem;
+	}
+
+	.login_btn {
+		margin-top : 5px;
+		margin-left : 100px;
+		background-color: transparent;
+	}
+
+	.box_login_input_text {
+		border-width: 0px;
+		border-bottom-width: 1px;
+		border-color: rgb(229 231 235 / var(--tw-border-opacity));
+		background-color: transparent;
+		padding-top: 0.625rem;
+		padding-bottom: 0.625rem;
+		padding-left: 0px;
+		padding-right: 0px;
+		font-size: 1rem;
+		line-height: 1.5rem;
+	}
+
+	.main_menu_selected {
+	  font-size : 1.5rem;
+	  line-height : 2rem;
+	  border-bottom : 2px solid black;
+	  font-style: italic;
+	}
+	.login_menu_selected {
+		font-size : 1.5rem;
+	  line-height : 2rem;
+	  border-bottom : 2px solid white;
+	}
+	.side_menu_selected {
+	  font-size : 1.5rem;
+	  line-height : 2rem;
+	  border-bottom : 2px solid black;
+	  font-style: italic;
+	}
+
+	.login_img {
+		padding-right : 5px;
+		width : 20px;
+		height: 20px;
+	}
+
+	a {
+		text-decoration: none;
+	}
+
+	#header{
+		width:100%;
+		height:50px;
+		text-align: center;
+		line-height: 50px;
+	}
+
+	#left{
+		height: 100%;
+		z-index: 1;
+		background-color: rgb(253, 253, 253);
+	    float:left;
+	    width:10%;
+	    text-align: center;
+	    position: relative;
+	    top: 0px;
+	}
+	#left a{
+		color :rgb(55, 55, 55);
+		text-decoration : none;
+		padding :10px;
+		display: block;
+	}
+
+	#main{
+		float:left;
+	    width:80%;
+	    padding-bottom: 20px;
+	}
+
+	#footer{
+	    width: 100%;
+	    height: 50px;
+	    text-align: center;
+	    clear:both;
+	    background-color: rgb(249, 249, 249);
+	}
+
+	#main{
+		min-height: 750px;
+	}
+
+	#menu{
+		padding-top: 10px;
+		position: relative;
+		left : -100px;
+		background-color: rgb(253, 253, 253);
+		height: 50px;
+		font-size : 16pt;
+		font-weight: bold;
+		text-align: center;
+	}
+	#menu a {
+		color :black;
+		padding : 0 5px 0 5px;
+		text-decoration : none;
+	}
