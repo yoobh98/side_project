@@ -19,4 +19,11 @@ public interface BoardService {
 
 	public PageDTO selectAllBoardList(BoardDTO dto);
 
+	public BoardDTO selectBoardOne(BoardDTO dto);
+
+	public List<BoardDTO> selectReplyByboardNum(BoardDTO dto);
+
+	public int replySave(BoardDTO dto);
+
+
 }

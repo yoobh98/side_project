@@ -29,4 +29,10 @@ public interface BoardDAO {
 
 	public List<BoardDTO> selectAllBoardList(BoardDTO dto);
 
+	public List<BoardDTO> selectReplyByboardNum(BoardDTO dto);
+
+	public int replySave(BoardDTO dto);
+
+	public int plusReplyCnt(BoardDTO dto);
+
 }

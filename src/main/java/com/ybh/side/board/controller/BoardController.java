@@ -52,7 +52,8 @@ public class BoardController {
 	}
 
 	@GetMapping("openBoardEditForm")
-	public String openBoardEditForm() {
+	public String openBoardEditForm(BoardDTO dto, Model model) {
+		model.addAttribute("boardOne", bs.selectBoardOne(dto));
 		return "board/boardEditPopup";
 	}
 
@@ -71,6 +72,20 @@ public class BoardController {
 	@PostMapping("selectAllBoardList")
 	public PageDTO selectAllBoardList(@RequestBody BoardDTO dto){
 		return bs.selectAllBoardList(dto);
+	}
+
+	@ResponseBody
+	@PostMapping("selectReplyByboardNum")
+	public List<BoardDTO> selectReplyByboardNum(@RequestBody BoardDTO dto){
+		return bs.selectReplyByboardNum(dto);
+	}
+
+	@ResponseBody
+	@PostMapping("replySave")
+	public List<BoardDTO> replySave(@RequestBody BoardDTO dto){
+		bs.replySave(dto);
+
+		return bs.selectReplyByboardNum(dto);
 	}
 
 }

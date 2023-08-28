@@ -67,4 +67,20 @@ public class BoardServiceImpl implements BoardService{
 		return pageDTO;
 	}
 
+	@Override
+	public List<BoardDTO> selectReplyByboardNum(BoardDTO dto) {
+		return dao.selectReplyByboardNum(dto);
+	}
+
+	@Override
+	public BoardDTO selectBoardOne(BoardDTO dto) {
+		return dao.selectBoardOne(dto);
+	}
+
+	@Override
+	public int replySave(BoardDTO dto) {
+		dao.plusReplyCnt(dto);
+		return dao.replySave(dto);
+	}
+
 }

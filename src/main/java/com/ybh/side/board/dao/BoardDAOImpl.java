@@ -75,4 +75,19 @@ public class BoardDAOImpl implements BoardDAO{
 	public List<BoardDTO> selectAllBoardList(BoardDTO dto) {
 		return sqlSession.selectList("BoardMapper.selectAllBoardList", dto);
 	}
+
+	@Override
+	public List<BoardDTO> selectReplyByboardNum(BoardDTO dto) {
+		return sqlSession.selectList("BoardMapper.selectReplyByboardNum", dto);
+	}
+
+	@Override
+	public int replySave(BoardDTO dto) {
+		return sqlSession.insert("BoardMapper.replySave", dto);
+	}
+
+	@Override
+	public int plusReplyCnt(BoardDTO dto) {
+		return sqlSession.update("BoardMapper.plusReplyCnt", dto);
+	}
 }

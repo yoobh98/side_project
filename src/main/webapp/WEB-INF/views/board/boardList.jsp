@@ -79,7 +79,7 @@
 						addHTML += "<p class = 'board_p'>" + list.userName + "</p>";
 						addHTML += "</div>";
 						addHTML += "<div class = 'board_div_top_two'>";
-						addHTML += "<p class = 'board_p'>" + list.writeDate + "</p>";
+						addHTML += "<p class = 'board_p'>" + getDate(list.writeDate) + "</p>";
 
 	/* 수정|삭제 */		addHTML += "<span id = 'dialog_" + list.boardNum + "' style='display:none;' class='span_border'>";
 						addHTML +=  "<a href = 'javascript:void(0)' onclick='updateBoard(" + list.boardNum + ")'>수정</a> ";
@@ -118,8 +118,9 @@
 						addHTML += "</a>";
 						addHTML += "</div>";
 						addHTML += "<div class='reply_div'>";
-						addHTML += "<a href = 'javascript:void(0)' onclick = 'openReplyPopup()'>";
-						addHTML += "<img src='<%=request.getContextPath()%>/resources/images/댓글아이콘.png' class='img_icon' onclick='openReplyPopup()'> " + list.replyCnt;
+						addHTML += "<a href = 'javascript:void(0)' onclick = 'openReplyPopup(" + list.boardNum + ")'>";
+						addHTML += "<img src='<%=request.getContextPath()%>/resources/images/댓글아이콘.png' class='img_icon'>";
+						addHTML += "<p id='reply_cnt_" + list.boardNum + "'>" + list.replyCnt + "</p>";
 						addHTML += "</a>";
 						addHTML += "</div>";
 /* Bottom-e */		addHTML += "</div>";
@@ -217,8 +218,8 @@
 		}
 	}
 
-	function openReplyPopup(){
-		fnPopUp("Content", 'openBoardEditForm');
+	function openReplyPopup(boardNum){
+		fnPopUp("Content", 'openBoardEditForm?boardNum=' + boardNum);
 	}
 
 	function deleteBoard(num){
@@ -271,6 +272,30 @@
 		} */
 		alert('수정 완료.')
 		selectAllBoardList();
+	}
+
+	function getDate(date) {
+		const start = new Date(date);
+		const end = new Date();
+
+		const diff = (end - start) / 1000;
+
+		const times = [
+			{ name: '년', milliSeconds: 60 * 60 * 24 * 365 },
+			{ name: '개월', milliSeconds: 60 * 60 * 24 * 30 },
+			{ name: '일', milliSeconds: 60 * 60 * 24 },
+			{ name: '시간', milliSeconds: 60 * 60 },
+			{ name: '분', milliSeconds: 60 },
+		];
+
+		for (const value of times) {
+			const betweenTime = Math.floor(diff / value.milliSeconds);
+
+			if (betweenTime > 0) {
+			return betweenTime + value.name + "전";
+			}
+		}
+		return '방금 전';
 	}
 
 </script>

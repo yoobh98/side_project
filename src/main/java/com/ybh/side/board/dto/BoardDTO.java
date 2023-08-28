@@ -1,5 +1,7 @@
 package com.ybh.side.board.dto;
 
+import java.sql.Date;
+
 import com.ybh.side.common.dto.PageDTO;
 
 import lombok.Data;

@@ -85,6 +85,7 @@
 		FROM board_table BOARD
 		LEFT JOIN user_tb USER_
 	   	ON BOARD.write_id = USER_.user_id
+	   	WHERE BOARD.board_parent_num = 0
 	   	<if test="likeMyGubun != null">
 			<if test="likeMyGubun.equals('LIKE_LIST')">
 				LEFT JOIN board_like_table LIKE_TB
@@ -92,7 +93,7 @@
 				WHERE LIKE_TB.like_user = #{sessUserId}
 			</if>
 			<if test="likeMyGubun.equals('MY_LIST')">
-				WHERE BOARD.write_id = #{sessUserId}
+				AND BOARD.write_id = #{sessUserId}
 			</if>
 		</if>
 	</select>
@@ -105,13 +106,14 @@
 				    , BOARD.board_parent_num
 				    , BOARD.content
 				    , BOARD.write_id
-				    , TO_CHAR(BOARD.write_date, 'YYYY-MM-DD') AS write_date
+				    , TO_CHAR(BOARD.write_date, 'YYYY/MM/DD HH24:MI:SS') AS write_date
 				    , BOARD.reply_cnt
 				    , BOARD.like_cnt
 				    , USER_.user_name
 				FROM board_table BOARD
 				LEFT JOIN user_tb USER_
 			    	ON BOARD.write_id = USER_.user_id
+			    WHERE BOARD.board_parent_num = 0
 			    <if test="likeMyGubun != null">
 					<if test="likeMyGubun.equals('LIKE_LIST')">
 						LEFT JOIN board_like_table LIKE_TB
@@ -119,7 +121,7 @@
 						WHERE LIKE_TB.like_user = #{sessUserId}
 					</if>
 					<if test="likeMyGubun.equals('MY_LIST')">
-						WHERE BOARD.write_id = #{sessUserId}
+						AND BOARD.write_id = #{sessUserId}
 					</if>
 				</if>
        		)A
@@ -129,5 +131,32 @@
 	     ORDER BY ROW_NUM
    		]]>
 	</select>
+
+	<select id="selectReplyByboardNum" resultType="BoardDTO">
+		SELECT *
+		FROM board_table
+		WHERE board_parent_num = ${boardNum}
+	</select>
+
+	<insert id="replySave">
+		INSERT INTO board_table (
+			board_num
+			, board_parent_num
+			, content
+			, write_id
+		)
+		VALUES (
+			board_num_seq.nextval
+			, #{boardNum}
+			, #{content}
+			, #{writeId}
+		)
+	</insert>
+
+	<update id="plusReplyCnt">
+		UPDATE board_table
+		SET reply_cnt = reply_cnt + 1
+		WHERE board_num = #{boardNum}
+	</update>
 
 </mapper>
